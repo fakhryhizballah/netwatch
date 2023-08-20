@@ -1,0 +1,23 @@
+[
+    {
+        "index": 0,
+        "name": "SIMRS Server",
+        "ip": "10.8.0.5",
+        "status": false,
+        "last_update": "8/20/2023, 7:38:03 PM"
+    },
+    {
+        "index": 1,
+        "name": "server",
+        "ip": "192.168.254.205",
+        "status": false,
+        "last_update": "8/20/2023, 7:38:06 PM"
+    },
+    {
+        "index": 2,
+        "name": "server",
+        "ip": "192.168.254.229",
+        "status": false,
+        "last_update": "8/20/2023, 7:38:09 PM"
+    }
+]

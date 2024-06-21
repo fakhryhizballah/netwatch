@@ -3,3 +3,5 @@
 /package-lock.json
 config.json
 log.json
+/data/*
+!/data/.gitkeep

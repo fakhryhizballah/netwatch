@@ -1,49 +1,56 @@
 const fs = require("fs");
 const cron = require("node-cron");
 const ping = require("ping");
-// async function netwacth() {
-//    let config = await fs.readFileSync("./config.json", "utf8");
-//     let configJson = JSON.parse(config);
-//     let newConfig = [];
-//     for(let i=0;i<configJson.length;i++){
-//         let element = configJson[i];
-//         let stat
-//         await ping.sys.probe(element.ip, function (isAlive) {
-//             if (isAlive) {
-//                 stat = {
-//                     ...element,
-//                     last_update: new Date().toLocaleString(),
-//                     status: true,
-//                 };
-//             } else {
-//                 stat = {
-//                     ...element,
-//                     last_update: new Date().toLocaleString(),
-//                     status: false,
-//                 };
-//             }
-//             newConfig.push(stat);
-//             if (element.status != stat.status) {
-//                 let online = stat.status ? "online" : "offline";
-//                 console.log("status changed "+ online +" "+ stat.ip);
-//                let log =  fs.readFileSync("./log.json", "utf8");
-//                 let logJson = JSON.parse(log);
-//                 logJson.push(stat);
-//                 fs.writeFileSync("./log.json", JSON.stringify(logJson));
-//             }
-//         });
-//     }
-//     fs.writeFileSync("./config.json", JSON.stringify(newConfig));
-
-// }
-// cron.schedule("*/2 * * * *", () => {
-// netwacth();
-// });
-
 module.exports = {
     addRouter: async (req, res, next) => {
-        req.status = 400;
+        let { name, group, ip } = req.body;
+        if (!name || !group || !ip) {
+            req.status = 400;
+            req.error = "ip, name, group is required";
+            return next();
+        }
+        let groupExist = fs.existsSync("./data/" + group + ".json");
+        if (!groupExist) {
+            fs.writeFileSync("./data/" + group + ".json", JSON.stringify([
+                {
+                    name, ip,
+                    last_update: new Date().toLocaleString(),
+                    status: false
+                }
+            ]));
+        }
+        let datagroup = fs.readFileSync("./data/" + group + ".json", "utf8");
+        datagroup = JSON.parse(datagroup);
+        let exist = datagroup.find((element) => element.ip == ip);
+        if (!exist) {
+            datagroup.push({
+                name, ip,
+                last_update: new Date().toLocaleString(),
+                status: false
+            });
+            fs.writeFileSync("./data/" + group + ".json", JSON.stringify(datagroup));
+        }
+        req.status = 200;
+        req.data = {
+            groupExist: datagroup
+        };
         next();
+    },
+    getGrupRute: async (req, res, next) => {
+        let { group } = req.params;
+        let groupExist = fs.existsSync("./data/" + group + ".json");
+        if (!groupExist) {
+            req.status = 404;
+            return next();
+        }
+        let datagroup = fs.readFileSync("./data/" + group + ".json", "utf8");
+        datagroup = JSON.parse(datagroup);
 
+        req.status = 200;
+        req.data = {
+            groupExist: datagroup
+        };
+        next();
     }
+
 };

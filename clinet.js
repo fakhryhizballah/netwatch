@@ -49,4 +49,4 @@ client.on("message", (topic, message) => {
 setInterval(function () {
     //code goes here that will be run every 5 seconds.    
     client.publish("clinet/Online", process.env.MqttClientId)
-}, 12000);
+}, process.env.setInterval);

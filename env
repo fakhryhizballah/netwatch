@@ -1,2 +1,23 @@
 PORT=
 MORGAN_TYPE= #dev
+
+#--------------------------------------------------------------------
+# SQL SECURITY
+#--------------------------------------------------------------------
+DB_USERNAME = 
+DB_PASSWORD = 
+DB_NAME = 
+DB_HOST = localhost
+DB_DIALECT=mariadb
+NODE_ENV=development
+
+#--------------------------------------------------------------------
+# Client Setup
+#--------------------------------------------------------------------
+MqttHost ="mqtt://localhost"
+MqttPort = 1883
+MqttUsername = 
+MqttPassword = 
+MqttClientId =
+
+TZ='Asia/Pontianak'

@@ -213,6 +213,44 @@ module.exports = {
         }
         next();
     },
+    getHistory: async (req, res, next) => {
+        let { id } = req.params;
+        try {
+            let memberExist = await member.findByPk(id);
+            if (!memberExist) {
+                req.status = 400;
+                req.error = {
+                    message: "member not found",
+                    error: "id member not found"
+                };
+                return next();
+            }
+            let historyExist = await history.findAll({
+                where: {
+                    idMembers: id
+                },
+                order: [
+                    ['lastUpdate', 'DESC']
+                ]
+            });
+            if (!historyExist) {
+                req.status = 404;
+                return next();
+            }
+            req.status = 200;
+            req.data = {
+                memberExist,
+                history: historyExist
+            };
+        } catch (error) {
+            req.status = 500;
+            req.error = {
+                message: error.message,
+                error: error
+            };
+        }
+        next();
+    }
 
 
 };

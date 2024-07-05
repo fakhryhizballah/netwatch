@@ -13,6 +13,7 @@ routes.get('/v1/grup', base.getGrup, middleware.response);
 routes.get('/v1/grup/:id', base.getGrupByName, middleware.response);
 routes.post('/v1/member', base.addMember, middleware.response);
 routes.delete('/v1/member/:id', base.delMember, middleware.response);
+routes.get('/v1/member/:id', base.getHistory, middleware.response);
 
 
 module.exports = routes;

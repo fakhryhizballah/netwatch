@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-
+const moment = require('moment');
 const { grup, history, member, sequelize } = require("../models");
 const e = require("express");
 module.exports = {
@@ -124,6 +124,24 @@ module.exports = {
             if (!group) {
                 req.status = 404;
                 return next();
+            }
+            for (let e of group.members) {
+                console.log(e.id);
+                let lastHistory = await history.findOne({
+                    where: {
+                        idMembers: e.id,
+                    },
+                    order: [
+                        ['lastUpdate', 'DESC']
+                    ]
+                });
+                if (lastHistory) {
+                    let startDate = moment(lastHistory.lastUpdate);
+                    let endDate = moment(new Date());
+                    let dif = endDate.diff(startDate);
+                    e.dataValues.since = moment.duration(dif).humanize();
+                }
+
             }
             req.status = 200;
             req.data = {

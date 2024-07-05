@@ -21,3 +21,4 @@ MqttPassword =
 MqttClientId =
 
 TZ='Asia/Pontianak'
+setInterval = 12000

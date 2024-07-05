@@ -13,7 +13,7 @@ const client = mqtt.connect({
     protocolId: 'MQTT',
     protocolVersion: 4,
 });
-console.log(process.env.MqttServerId);
+console.log("Broker ID: " + process.env.MqttServerId);
 client.on("connect", () => {
     console.log("connected");
     client.subscribe("clinet/Offline")
@@ -28,6 +28,7 @@ client.on("message", async (topic, message) => {
     if (topic == "clinet/Online") {
         console.log("client offline");
         // client.publish("gateway/" + message, 'ini adalah pesan dari server');
+        try {
         let clientGroup = await grup.findOne({
             where: {
                 nameGrup: message
@@ -46,9 +47,13 @@ client.on("message", async (topic, message) => {
         });
         // console.log(clientGroup);
         client.publish("gateway/" + message, JSON.stringify(clientGroup));
+        } catch (error) {
+            console.log(error);
+        }
     } else if (topic == "clinet/Offline") {
         console.log("client offline");
         // client.publish("gateway/" + message, 'ini adalah pesan dari server');
+        try {
         let clientGroup = await grup.findOne({
             where: {
                 nameGrup: message
@@ -59,8 +64,9 @@ client.on("message", async (topic, message) => {
             status: false,
             lastUpdate: new Date()
         });
-        // console.log(clientGroup);
-        console.log("client offline");
+        } catch (error) {
+            console.log(error);
+        }
     } else if (topic == "cilent/Update/online") {
         console.log("IP online" + message);
         let statusMember = await member.findByPk(message);

@@ -18,7 +18,7 @@ var settings = {
 
 $.ajax(settings).done(function (response) {
     let data = response.data;
-    console.log(data);
+    // console.log(data);
     let title = data.group.nameGrup + " - Netwatch";
     let serverLastUpdate = new Date(data.group.lastUpdate).toLocaleString();
     let serverStatus = (data.group.status) ? "Online" : "Offline";
@@ -33,15 +33,16 @@ $.ajax(settings).done(function (response) {
 
     let dataMembers = data.group.members;
     let x = 0;
-    let status = (data.group.status) ? "Online" : "Offline";
     let lastUpdate = new Date(data.group.lastUpdate).toLocaleString();
     for (let e of dataMembers) {
+        console.log(e.status);
+        let status = (e.status) ? "Online" : "Offline";
         x++;
         let row = $("<tr class='table-danger'>");
         if (e.status) {
             row = $("<tr class='table-success'>");
         }
-        console.log(e);
+        // console.log(e);
         row.append($("<td>" + x + "</td>"));
         row.append($("<td>" + e.name + "</td>"));
         row.append($("<td>" + e.ip + "</td>"));

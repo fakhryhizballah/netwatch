@@ -16,6 +16,8 @@ module.exports = {
           model: 'members',
           key: 'id'
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       lastUpdate: {
         type: Sequelize.DATE

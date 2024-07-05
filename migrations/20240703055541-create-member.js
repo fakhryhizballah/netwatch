@@ -1,4 +1,7 @@
 'use strict';
+
+const { addMember } = require('../controllers');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -41,7 +44,15 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    },
+      {
+        uniqueKeys: {
+          uniqueMember: {
+            fields: ['name', 'idGrup', 'ip']
+          }
+        }
+      }
+    );
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('members');

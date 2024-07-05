@@ -38,6 +38,9 @@ $.ajax(settings).done(function (response) {
     for (let e of dataMembers) {
         x++;
         let row = $("<tr class='table-danger'>");
+        if (e.status) {
+            row = $("<tr class='table-success'>");
+        }
         console.log(e);
         row.append($("<td>" + x + "</td>"));
         row.append($("<td>" + e.name + "</td>"));

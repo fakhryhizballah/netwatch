@@ -3,6 +3,7 @@ const routes = express.Router();
 
 const base = require('../controllers');
 const middleware = require('../middlewares');
+const webview = require('../controllers/webview');
 
 
 routes.post('/setup', base.addRouter, middleware.response);
@@ -14,6 +15,8 @@ routes.get('/v1/grup/:id', base.getGrupByName, middleware.response);
 routes.post('/v1/member', base.addMember, middleware.response);
 routes.delete('/v1/member/:id', base.delMember, middleware.response);
 routes.get('/v1/member/:id', base.getHistory, middleware.response);
+
+routes.get('/v1/monitoring/:name', webview.login);
 
 
 module.exports = routes;

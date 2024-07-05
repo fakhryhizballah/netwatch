@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <%- include('template/header'); %>
+</head>
+
+<body>
+    <div class="container">
+        <div id="app"></div>
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title" id="nameGrup">Card title</h5>
+                <p class="card-text" id="description">.</p>
+            </div>
+        </div>
+        <table class="table" id="tabelClient">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">IP</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">since</th>
+                    <th scope="col">lastUpdate</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ./wrapper -->
+    <%- include('template/footer'); %>
+        <script>
+            const baseURL = "<%= baseURL %>";
+            const baseName = "<%= baseName %>";
+            console.log("Message from EJS: ", baseURL);
+        </script>
+        <script src="/asset/js/script.js">
+        </script>
+</body>
+
+</html>

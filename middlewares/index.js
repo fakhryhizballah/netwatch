@@ -21,6 +21,13 @@ module.exports = {
                 error: null
             });
         }
+        if (req.status == 500) {
+            req.error = req.error || "internal server error";
+            return res.status(500).json({
+                message: "internal server error",
+                error: req.error
+            });
+        }
     }
 
 };

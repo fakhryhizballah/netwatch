@@ -118,6 +118,16 @@ module.exports = {
                         model: member,
                         as: "members",
                         // attributes: { exclude: 'id' }
+                        include: [
+                            {
+                                model: history,
+                                as: "lastHistory",
+                                // order: [
+                                //     ['createdAt', 'DESC']
+                                // ]
+                                attributes: ['lastUpdate', 'id']
+                            }
+                        ]
                     }
                 ]
             });
@@ -126,18 +136,18 @@ module.exports = {
                 return next();
             }
             for (let e of group.members) {
-                console.log(e.id);
-                let lastHistory = await history.findOne({
-                    where: {
-                        idMembers: e.id,
-                    },
-                    order: [
-                        ['lastUpdate', 'DESC']
-                    ]
-                });
-                if (lastHistory) {
-                    let startDate = moment(lastHistory.lastUpdate);
-                    let endDate = moment(new Date());
+                // console.log(e.id);
+                // let lastHistory = await history.findOne({
+                //     where: {
+                //         idMembers: e.id,
+                //     },
+                //     order: [
+                //         ['lastUpdate', 'DESC']
+                //     ]
+                // });
+                if (e.lastHistory) {
+                    let startDate = moment(e.lastHistory.lastUpdate);
+                    let endDate = moment(e.lastUpdate);
                     let dif = endDate.diff(startDate);
                     e.dataValues.since = moment.duration(dif).humanize();
                 }

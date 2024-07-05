@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      member.hasOne(models.history, {
+        foreignKey: "idMembers",
+        sourceKey: "id",
+        as: "lastHistory",
+      });
     }
   }
   member.init({

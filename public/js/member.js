@@ -8,7 +8,11 @@ let dataTable = $('#tabelClient').DataTable({
         { data: function (data, type, row, meta) { return meta.row + 1 } },
         { data: 'name' },
         { data: 'ip' },
-        { data: function (data) { return (data.status) ? "Online" : "Offline" } },
+        {
+            data: function (data) {
+                return (data.status) ? "Online" : "Offline"
+            }
+        },
         { data: 'since' },
         {
             data: function (data) {
@@ -17,7 +21,15 @@ let dataTable = $('#tabelClient').DataTable({
                 })
             }
         },
-    ],
+    ], 
+    createdRow: function (row, data, dataIndex) {
+        console.log(row);
+        if (data.status) {
+            $(row).addClass('table-success');
+        } else {
+            $(row).addClass('table-danger');
+        }
+    },
     scrollY: "600px",
     // paging: false,
     lengthMenu: [10, 20, 30, 40, 50],

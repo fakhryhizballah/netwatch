@@ -1,13 +1,20 @@
 require('dotenv').config();
 module.exports = {
-    login: (req, res) => {
+    members: (req, res) => {
         let params = req.params;
-        let baseURL = process.env.BASE_URL || "http://localhost:3000";
+        res.cookie('baseName', params.name, { maxAge: 900000 });
         let data = {
             title: params.name + "| Netwatch",
-            baseName: params.name,
-            baseURL: baseURL
+            baseName: params.name
         };
         res.render("members", data);
+    },
+    history: (req, res) => {
+        // let params = req.params;
+
+        let data = {
+            title: "History | Netwatch",
+        };
+        res.render("history", data);
     }
 };

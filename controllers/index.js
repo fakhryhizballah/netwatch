@@ -89,12 +89,12 @@ module.exports = {
     },
     getGrup: async (req, res, next) => {
         try {
-            let group = await grup.findAll({
+            let groups = await grup.findAll({
                 attributes: { exclude: 'id' }
             });
             req.status = 200;
             req.data = {
-                group: group
+                group: groups
             };
         } catch (error) {
             req.status = 500;
@@ -108,7 +108,7 @@ module.exports = {
     getGrupByName: async (req, res, next) => {
         let { id } = req.params;
         try {
-            let group = await grup.findOne({
+            let groups = await grup.findOne({
                 where: {
                     nameGrup: id
                 },
@@ -131,20 +131,11 @@ module.exports = {
                     }
                 ]
             });
-            if (!group) {
+            if (!groups) {
                 req.status = 404;
                 return next();
             }
-            for (let e of group.members) {
-                // console.log(e.id);
-                // let lastHistory = await history.findOne({
-                //     where: {
-                //         idMembers: e.id,
-                //     },
-                //     order: [
-                //         ['lastUpdate', 'DESC']
-                //     ]
-                // });
+            for (let e of groups.members) {
                 if (e.lastHistory) {
                     let startDate = moment(e.lastHistory.lastUpdate);
                     let endDate = moment(e.lastUpdate);
@@ -155,8 +146,58 @@ module.exports = {
             }
             req.status = 200;
             req.data = {
-                group: group
+                group: groups
             };
+        } catch (error) {
+            req.status = 500;
+            req.error = {
+                message: error.message,
+                error: error
+            };
+        }
+        next();
+    },
+    getMeberByName: async (req, res, next) => {
+        let { id } = req.params;
+        try {
+            let groups = await grup.findOne({
+                where: {
+                    nameGrup: id
+                },
+                attributes: ['nameGrup'],
+                include: [
+                    {
+                        model: member,
+                        as: "members",
+                        // attributes: { exclude: 'id' }
+                        include: [
+                            {
+                                model: history,
+                                as: "lastHistory",
+                                // order: [
+                                //     ['createdAt', 'DESC']
+                                // ]
+                                attributes: ['lastUpdate', 'id']
+                            }
+                        ]
+                    }
+                ]
+            });
+            if (!groups) {
+                req.status = 404;
+                return next();
+            }
+            for (let e of groups.members) {
+                if (e.lastHistory) {
+                    let startDate = moment(e.lastHistory.lastUpdate);
+                    let endDate = moment(e.lastUpdate);
+                    let dif = endDate.diff(startDate);
+                    e.dataValues.since = moment.duration(dif).humanize();
+                }
+            }
+            req.status = 200;
+            req.data = groups.members;
+
         } catch (error) {
             req.status = 500;
             req.error = {
@@ -266,10 +307,8 @@ module.exports = {
                 return next();
             }
             req.status = 200;
-            req.data = {
-                memberExist,
-                history: historyExist
-            };
+            req.data = historyExist
+
         } catch (error) {
             req.status = 500;
             req.error = {

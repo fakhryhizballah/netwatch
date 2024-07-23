@@ -300,7 +300,8 @@ module.exports = {
                 },
                 order: [
                     ['lastUpdate', 'DESC']
-                ]
+                ],
+                limit: 30
             });
             if (!historyExist) {
                 req.status = 404;

@@ -259,7 +259,10 @@ module.exports = {
     delMember: async (req, res, next) => {
         let { id } = req.params;
         try {
-            let memberExist = await member.findByPk(id);
+            let memberExist = await member.findByPk(id, {
+                attributes: ['id', 'status']
+            });
+            console.log(memberExist.status);
             if (!memberExist) {
                 req.status = 400;
                 req.error = {
@@ -268,12 +271,25 @@ module.exports = {
                 };
                 return next();
             }
-            await memberExist.destroy();
+
+            if (memberExist.status) {
+                await memberExist.update({
+                    status: false
+                });
+                req.status = 200;
+                req.data = {
+                    message: "member deleted"
+                };
+                return next();
+            }
+
+            // await memberExist.destroy();
             req.status = 200;
             req.data = {
-                message: "success delete member"
+                message: "member already deleted"
             };
         } catch (error) {
+            console.log(error);
             req.status = 500;
             req.error = {
                 message: error.message,
@@ -285,15 +301,6 @@ module.exports = {
     getHistory: async (req, res, next) => {
         let { id } = req.params;
         try {
-            let memberExist = await member.findByPk(id);
-            if (!memberExist) {
-                req.status = 400;
-                req.error = {
-                    message: "member not found",
-                    error: "id member not found"
-                };
-                return next();
-            }
             let historyExist = await history.findAll({
                 where: {
                     idMembers: id
@@ -303,8 +310,13 @@ module.exports = {
                 ],
                 limit: 30
             });
-            if (!historyExist) {
-                req.status = 404;
+            console.log(historyExist.length);
+            if (historyExist.length == 0) {
+                req.status = 400;
+                req.error = {
+                    message: "member not found",
+                    error: "id member not found"
+                };
                 return next();
             }
             req.status = 200;
